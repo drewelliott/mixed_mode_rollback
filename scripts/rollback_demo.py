@@ -73,7 +73,6 @@ def rollback():
 
 def main():
     create_rollback_point()
-    check_isis_adj()
     perform_netconf_changes()
     check_isis_adj()
 
