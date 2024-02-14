@@ -36,3 +36,29 @@ When the topology finishes booting, you will have the following starting state.
                 ISIS: 49.0001
                 iBGP: 65001
 ```
+
+### Step 2: Running the script
+
+Running in mixed-mode precludes us from using pysros. In order to achieve the goals of this script, I chose to utilize two different applications - [pygnmi](https://github.com/akarneliuk/pygnmi) and [netmiko](https://github.com/ktbyers/netmiko)
+
+The cleanest way to install these is to run a python virtual env for this demo script:
+
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install netmiko
+pip install pygnmi
+```
+
+Once you have the prereqs installed and the topology is running in your [containerlab](https://containerlab.dev), we can run the script.
+
+>The script is in the `scripts` directory, so I am assuming you are in the `scripts` directory when running the command
+
+`python rollback_demo.py`
+
+What the script does is very simple - 
+
+ - `netmiko` Saves a rollback point in SROS
+ - `pygnmi` Changes the ISIS level-capability to 1, causing the ISIS adj to go down since the interfaces are set to level 2
+ - `pygnmi` Checks the state of the ISIS adj, and if it is down, calls for a rollback
+ - `netmiko` Performs a rollback
